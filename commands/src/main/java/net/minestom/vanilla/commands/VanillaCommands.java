@@ -18,6 +18,7 @@ public enum VanillaCommands {
     STOP(StopCommand::new),
     HELP(HelpCommand::new),
     SAVE_ALL(SaveAllCommand::new),
+    KICK(KickCommand::new),
     ;
 
     private final Supplier<Command> commandCreator;
