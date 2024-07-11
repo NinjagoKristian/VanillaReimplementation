@@ -1,0 +1,40 @@
+package net.minestom.vanilla.commands;
+
+import net.minestom.server.command.CommandSender;
+import net.minestom.server.command.builder.Command;
+import net.minestom.server.command.builder.CommandContext;
+import net.minestom.server.command.builder.arguments.ArgumentType;
+import net.minestom.server.entity.Entity;
+import net.minestom.server.entity.Player;
+
+public class KickCommand extends Command {
+
+    public KickCommand() {
+        super("kick");
+
+        var playerArg = ArgumentType.Entity("player").onlyPlayers(true).singleEntity(true);
+        var reasonArg = ArgumentType.StringArray("reason").setDefaultValue(new String[0]);
+
+        addSyntax(this::executeKick, playerArg, reasonArg);
+    }
+
+    private void executeKick(CommandSender sender, CommandContext context) {
+        // TODO: Add permissions check
+        Entity entity = context.get("player");
+        String[] reasonArray = context.get("reason");
+
+        if (!(entity instanceof Player targetPlayer)) {
+            sender.sendMessage("Player not found.");
+            return;
+        }
+
+        String reason = String.join(" ", reasonArray).trim();
+        if (reason.isEmpty()) {
+            reason = "Kicked by an operator.";
+        }
+
+        targetPlayer.kick(reason);
+        sender.sendMessage("Kicked player " + targetPlayer.getUsername() + " for: " + reason);
+    }
+}
+
